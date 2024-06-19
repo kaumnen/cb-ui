@@ -1,8 +1,16 @@
 version: "3"
 services:
   cb-ui:
+    container_name: cb-ui
     build: .
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+    networks:
+      - chatbot-network
+
+networks:
+  chatbot-network:
+    driver: bridge
+    external: true

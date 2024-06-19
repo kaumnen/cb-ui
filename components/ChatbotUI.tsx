@@ -6,6 +6,7 @@ import styles from "./ChatbotUI.module.css";
 interface Message {
   sender: "user" | "bot";
   text: string;
+  intent?: string;
 }
 
 const ChatbotUI = () => {
@@ -28,7 +29,11 @@ const ChatbotUI = () => {
         body: JSON.stringify({ message: input }),
       });
       const data = await response.json();
-      const botMessage: Message = { sender: "bot", text: data.reply };
+      const botMessage: Message = {
+        sender: "bot",
+        text: data.reply,
+        intent: data.intent,
+      };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error("Error sending message:", error);
@@ -45,7 +50,10 @@ const ChatbotUI = () => {
               msg.sender === "user" ? styles.userMessage : styles.botMessage
             }
           >
-            {msg.text}
+            {msg.intent && (
+              <div className={styles.intent}>Intent: {msg.intent}</div>
+            )}
+            <div>{msg.text}</div>
           </div>
         ))}
       </div>
