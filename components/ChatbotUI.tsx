@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import styles from "./ChatbotUI.module.css";
 
+interface Message {
+  sender: "user" | "bot";
+  text: string;
+}
+
 const ChatbotUI = () => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (input.trim() === "") return;
 
-    const userMessage = { sender: "user", text: input };
+    const userMessage: Message = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
     setInput("");
@@ -23,7 +28,7 @@ const ChatbotUI = () => {
         body: JSON.stringify({ message: input }),
       });
       const data = await response.json();
-      const botMessage = { sender: "bot", text: data.reply };
+      const botMessage: Message = { sender: "bot", text: data.reply };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error("Error sending message:", error);
